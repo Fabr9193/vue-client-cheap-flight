@@ -69,8 +69,7 @@
 </template>
 
 <script>
-  //  const urlApi = 'http://google.com';
-  const axios =require("axios")
+  const axios = require("axios")
 export default {
   name: 'HomePage',
     data(){
@@ -86,9 +85,8 @@ export default {
 
     },
     methods: {
-      checkForm: function () {
-          console.log();
-        axios.get(' https://fast-sierra-13727.herokuapp.com/search?' , this.userData).then(function (result){
+      checkForm: function () {          
+        axios.get('https://fast-sierra-13727.herokuapp.com/search?' , this.userData).then(function (result){
             console.log('here')
             console.log(result);
         })
