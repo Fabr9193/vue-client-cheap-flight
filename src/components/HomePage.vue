@@ -32,6 +32,25 @@
                            </div>
                        </div>
                    </div>
+                   <div class="w-full flex flex-wrap justify-center my-5">
+
+                       <div class="w-1/2 flex flex-col md:flex-row ">
+                           <div>
+                               <label for="price">Date de départ</label>
+                           </div>
+                           <div class="ml-0 md:ml-2">
+                               <input id="date_from" type="date" v-model="userData.date_from">
+                           </div>
+                       </div>
+                       <div class="flex flex-col md:flex-row justify-center align-middle">
+                           <div>
+                               <label for="nights_in_dest_from">Jours </label>
+                           </div>
+                           <div class="ml-0 md:ml-2">
+                               <input id="nights_in_dest_from" v-model.number="userData.nights_in_dest_from" type="number">
+                           </div>
+                       </div>
+                   </div>
                </div>
                <div class="mt-10"></div>
                <div class="text-left mb-5 ">Régions préférées</div>
@@ -69,28 +88,36 @@
 </template>
 
 <script>
-  const axios = require("axios")
-export default {
+  const axios = require("axios");
+  const queryString = require('query-string');
+  const moment = require('moment');
+
+  export default {
   name: 'HomePage',
     data(){
       return {
           userData : {
-          regions: [],
-          adults: 0,
-          price: 0,
-          fly_from: '',
-        }}
-      },
+              regions: [],
+              adults: 0,
+              price: 0,
+              fly_from: '',
+              nights_in_dest_from : 1,
+              date_from : "",
+          }
+      }
+    },
     computed: {
-
     },
     methods: {
-      checkForm: function () {          
-        axios.get('https://fast-sierra-13727.herokuapp.com/search?' , this.userData).then(function (result){
-            console.log('here')
+      checkForm: function () {
+          let date = moment(this.userData.date_from);
+          this.userData.date_from = date.format("DD/MM/YYYY");
+          let query =  queryString.stringify(this.userData);
+          axios.get('http://localhost:8000/search?'+ query).then(function (result)
+          {
+            console.log('here');
             console.log(result);
-        })
-
+          })
       },
 
     }
