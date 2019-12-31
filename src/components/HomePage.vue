@@ -1,6 +1,6 @@
 <!-- TODO ajouter le nombre de nuits, bien lancer la requete vers l'API, afficher les résultats sur un autre Element (resultsSearch.Vue) -->
 <template>
-  <div>
+  <div @keypress.enter="checkForm()" >
    <div class="mt-5 text-4xl font-bold font-bold">Cheap-Flight</div>
 
           <div class="search-bar block">
@@ -82,8 +82,13 @@
                     </div>
                 </div>
             </div>
-               <button type="submit" v-on:click="checkForm()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Search</button>
+               <button type="submit" @click="checkForm()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Search</button>
            </div>
+<div v-if="resultData">
+    results : {{resultData.total}}
+</div>
+
+
   </div>
 </template>
 
@@ -103,6 +108,10 @@
               fly_from: '',
               nights_in_dest_from : 1,
               date_from : "",
+          },
+          resultData : {
+              total : 0,
+              data: []
           }
       }
     },
@@ -110,13 +119,19 @@
     },
     methods: {
       checkForm: function () {
+          const url = 'https://fast-sierra-13727.herokuapp.com/search?';
           let date = moment(this.userData.date_from);
           this.userData.date_from = date.format("DD/MM/YYYY");
           let query =  queryString.stringify(this.userData);
-          axios.get('http://localhost:8000/search?'+ query).then(function (result)
+          axios.get(url + query).then(function (result)
           {
-            console.log('here');
-            console.log(result);
+              console.log(result.data.data);
+              console.log(result.data.total_results);
+            this.resultData.data.push(result.data.data);
+            this.resultData.total.push(result.data.total_results);
+          })
+          .catch( function(error) {
+              console.error(error);
           })
       },
 
